@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: common-instance
+  config:
+    import:
+    - optional:configserver:http://127.0.0.1:8888/onfigc
+    - https://raw.githubusercontent.com/excitingobject/config-server/master/files/common/jpa.mariadb-dev.yml
