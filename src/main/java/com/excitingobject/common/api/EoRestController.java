@@ -1,8 +1,7 @@
-package com.excitingobject.common.base.api;
+package com.excitingobject.common.api;
 
-import com.excitingobject.common.base.EoCommon;
-import com.excitingobject.common.base.api.response.EoResponseDto;
-import com.excitingobject.common.base.api.response.EoResponseStatus;
+import com.excitingobject.common.EoCommon;
+import com.excitingobject.common.api.response.EoResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

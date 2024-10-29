@@ -1,7 +1,7 @@
-package com.excitingobject.common.base.api.response;
+package com.excitingobject.common.api.response;
 
-import com.excitingobject.common.base.EoConstants;
-import com.excitingobject.common.base.api.EoEntity;
+import com.excitingobject.common.EoConstants;
+import com.excitingobject.common.api.EoEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import org.springframework.data.domain.Page;

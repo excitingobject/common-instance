@@ -1,4 +1,4 @@
-package com.excitingobject.common.base;
+package com.excitingobject.common;
 
 import java.util.Collection;
 import java.util.Map;

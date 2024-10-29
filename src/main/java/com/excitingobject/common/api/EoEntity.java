@@ -1,7 +1,7 @@
-package com.excitingobject.common.base.api;
+package com.excitingobject.common.api;
 
-import com.excitingobject.common.base.EoConstants;
-import com.excitingobject.common.base.api.response.EoResponse;
+import com.excitingobject.common.EoConstants;
+import com.excitingobject.common.api.response.EoResponse;
 
 import java.util.HashMap;
 import java.util.Map;

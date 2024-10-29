@@ -1,4 +1,4 @@
-package com.excitingobject.common.base.api.sequences;
+package com.excitingobject.common.api.sequences;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

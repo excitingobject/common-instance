@@ -1,1 +1,2 @@
-com.excitingobject.common.base.api.sequences.SeqConfig
+com.excitingobject.common.api.sequences.SeqConfig
+com.excitingobject.common.api.message.MessageConfig

@@ -3,5 +3,6 @@ spring:
     name: common-instance
   config:
     import:
-    - optional:configserver:http://127.0.0.1:8888/onfigc
+    - optional:configserver:http://127.0.0.1:8888/config
     - https://raw.githubusercontent.com/excitingobject/config-server/master/files/common/jpa.mariadb-dev.yml
+    - https://raw.githubusercontent.com/excitingobject/config-server/master/files/common/message-source-dev.yml

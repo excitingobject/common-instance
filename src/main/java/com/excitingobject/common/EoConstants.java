@@ -1,4 +1,4 @@
-package com.excitingobject.common.base;
+package com.excitingobject.common;
 
 public interface EoConstants {
     /**
@@ -11,10 +11,12 @@ public interface EoConstants {
     String K_ACTION_ID = "actionId";
     String K_ACTION_STATUS = "actionStatus";
     String K_ACTION_TYPE = "actionType";
+    String K_CODE = "code";
     String K_CREATE_TIME = "createTime";
     String K_EMAIL = "email";
     String K_ENCODED_PW = "encodedPw";
     String K_EXCEPTION = "exception";
+    String K_LOCALE = "locale";
     String K_NAME = "name";
     String K_PASSWORD = "password";
     String K_PHONE = "phone";
@@ -35,6 +37,7 @@ public interface EoConstants {
     String K_SIGN_IN_TIME = "signInTime";
     String K_TABLE_NAME = "tableName";
     String K_TAG = "tag";
+    String K_TEXT = "text";
     String K_UPDATE_TIME = "updateTime";
     String K_USER = "user";
     String K_USER_ACCOUNT_LIST = "userAccountList";
@@ -66,6 +69,7 @@ public interface EoConstants {
     /**
      * Table
      */
+    String TB_MESSAGE = "TB_MESSAGE";
     String TB_ROLE = "TB_ROLE";
     String TB_SEQ = "TB_SEQ";
     String TB_USER = "TB_USER";

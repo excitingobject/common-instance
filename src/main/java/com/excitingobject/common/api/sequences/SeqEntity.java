@@ -1,7 +1,7 @@
-package com.excitingobject.common.base.api.sequences;
+package com.excitingobject.common.api.sequences;
 
-import com.excitingobject.common.base.EoConstants;
-import com.excitingobject.common.base.api.EoEntity;
+import com.excitingobject.common.EoConstants;
+import com.excitingobject.common.api.EoEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

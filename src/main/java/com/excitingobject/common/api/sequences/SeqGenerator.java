@@ -1,6 +1,6 @@
-package com.excitingobject.common.base.api.sequences;
+package com.excitingobject.common.api.sequences;
 
-import com.excitingobject.common.base.EoConstants;
+import com.excitingobject.common.EoConstants;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.ParameterMode;
 import org.hibernate.HibernateException;
@@ -32,19 +32,20 @@ public abstract class SeqGenerator implements IdentifierGenerator, Configurable,
     private void init() {
         List<SeqEntity> list = new ArrayList<>();
         this.initList(list);
-        for (SeqEntity e: list) {
-            if(e != null && !seqRepository.existsById(e.getTableName())) {
+        for (SeqEntity e : list) {
+            if (e != null && !seqRepository.existsById(e.getTableName())) {
                 seqRepository.save(e);
             }
         }
     }
+
     static final String KEY_IN = "IN_TABLE_NAME";
     static final String KEY_OUT_SEQ = "OUT_SEQ";
     static final String KEY_OUT_PREFIX = "OUT_PREFIX";
     static final String PROCEDURE = "SEQ_GENERATOR";
     static final String FORMAT_DATE_CODE = "yyyyMMdd";
 
-    private SimpleDateFormat dataCodeFormat = new SimpleDateFormat(FORMAT_DATE_CODE);
+    private final SimpleDateFormat dataCodeFormat = new SimpleDateFormat(FORMAT_DATE_CODE);
 
     private String tableName;
 
@@ -73,10 +74,9 @@ public abstract class SeqGenerator implements IdentifierGenerator, Configurable,
             String prefix = (String) outputs.getOutputParameterValue(KEY_OUT_PREFIX);
             String dateCode = dataCodeFormat.format(new Date());
             String seqCode = getSeqCode(new BigDecimal(seq.toString()));
-            String id = prefix + dateCode + seqCode;
 
 //            logger.info("[IdGenerator - tableName:"+tableName+"] Create ID : " + id);
-            return id;
+            return prefix + dateCode + seqCode;
         } catch (Exception e) {
 //            logger.error(e.getMessage());
             throw new HibernateException(e);
@@ -85,8 +85,6 @@ public abstract class SeqGenerator implements IdentifierGenerator, Configurable,
 
     /**
      * 10진수(seq)로 seqCode(36진수 6자리 문자열 : 000000 ~ ZZZZZZ)생성
-     * @param seq
-     * @return
      */
     private String getSeqCode(BigDecimal seq) {
         // seqCode : 36진수 6자리: 000000(0) ~ ZZZZZZ(2,176,782,335)
@@ -94,16 +92,16 @@ public abstract class SeqGenerator implements IdentifierGenerator, Configurable,
         BigDecimal su = new BigDecimal("36"); // 변환 진수(36)
         int digit = 6; // 변환 진수 자릿수
 
-        Stack<String> stack = new Stack<String>();
-        while (num.compareTo(BigDecimal.ZERO) == 1) {
+        Stack<String> stack = new Stack<>();
+        while (num.compareTo(BigDecimal.ZERO) > 0) {
             // cNum(10진수값을 변환 진수(36)로 나눈 나머지 : num & su)
             BigDecimal cNum = num.remainder(su);
-            if(cNum.compareTo(new BigDecimal("9"))==1) {
+            if (cNum.compareTo(new BigDecimal("9")) > 0) {
                 // 나머지가 10 이상이면 아스키코드로 치환 A(65)~Z(90)
                 int ASC_A = 'A';
                 int _c = ASC_A + (cNum.intValue() - 10);
-                Character c = Character.valueOf((char)_c);
-                stack.push(c.toString());
+                char c = (char) _c;
+                stack.push(Character.toString(c));
             } else {
                 stack.push(cNum.toString());
             }
@@ -111,20 +109,20 @@ public abstract class SeqGenerator implements IdentifierGenerator, Configurable,
             num = num.divide(su, 0, RoundingMode.DOWN);
         }
         // 36진수 문자열 조합
-        String seqCode = "";
+        StringBuilder seqCode = new StringBuilder();
         while (!stack.isEmpty()) {
             String val = stack.pop();
-            seqCode += val;
+            seqCode.append(val);
         }
         // padding (앞에 '0'채우기)
-        return prefixPadding(seqCode, '0', digit);
+        return prefixPadding(seqCode.toString(), '0', digit);
     }
 
     public String prefixPadding(String str, char pad, int digit) {
-        String code = str;
-        for(int i = (code.getBytes()).length; i < digit; i++) {
-            code = pad + code;
+        StringBuilder code = new StringBuilder(str);
+        for (int i = (code.toString().getBytes()).length; i < digit; i++) {
+            code.insert(0, pad);
         }
-        return code;
+        return code.toString();
     }
 }

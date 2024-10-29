@@ -1,4 +1,4 @@
-package com.excitingobject.common.base.api.response;
+package com.excitingobject.common.api.response;
 
 import java.util.Map;
 

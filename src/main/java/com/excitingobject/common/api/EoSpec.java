@@ -1,6 +1,6 @@
-package com.excitingobject.common.base.api;
+package com.excitingobject.common.api;
 
-import com.excitingobject.common.base.EoConstants;
+import com.excitingobject.common.EoConstants;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.sql.Timestamp;
