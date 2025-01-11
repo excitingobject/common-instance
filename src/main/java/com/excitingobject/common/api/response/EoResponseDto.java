@@ -13,19 +13,21 @@ import java.util.Map;
 
 @Data
 public class EoResponseDto {
-    private String code = EoResponseStatus.SUCCESS.getCode();
 
-    enum DataType {
-        NULL,
-        OBJECT,
-        LIST
-    }
-    private DataType dataType = DataType.NULL;
     private Object data = null;
+    private String dataType = null;
 
     private Map<String, Object> pageInfo = null;
-
+    private String code = EoResponseStatus.SUCCESS.getCode();
     private String message = "";
+
+    public EoResponseDto() {
+        super(); // success
+    }
+
+    public EoResponseDto(Object data) {
+        setData(data);
+    }
 
     public EoResponseDto(Object data, String code, String message) {
         setData(data);
@@ -33,7 +35,21 @@ public class EoResponseDto {
         this.message = message;
     }
 
-    private Object refineData (Object data) {
+    private void setData(Object data) {
+        this.data = this.refineData(data);
+        if (this.data == null) {
+        } else if (this.data instanceof Map) {
+            this.dataType = "object";
+        } else if (this.data instanceof List) {
+            this.dataType = "list";
+            if (data instanceof Page) {
+                this.setPageInfo((Page) data);
+            }
+        }
+    }
+
+
+    private Object refineData(Object data) {
         try {
             if (data instanceof EoEntity) {
                 return ((EoEntity) data).getResponseDto();
@@ -41,7 +57,7 @@ public class EoResponseDto {
                 return data;
             } else if (data instanceof Iterable) {
                 List<Object> list = new ArrayList<>();
-                for (Object d: (Iterable)data) {
+                for (Object d : (Iterable) data) {
                     list.add(refineData(d));
                 }
                 return list;
@@ -51,20 +67,6 @@ public class EoResponseDto {
             }
         } catch (Exception e) {
             return null;
-        }
-    }
-
-    private void setData(Object data) {
-        this.data = this.refineData(data);
-        if(this.data == null) {
-            this.dataType = DataType.NULL;
-        } else if(this.data instanceof Map) {
-            this.dataType = DataType.OBJECT;
-        } else if(this.data instanceof List) {
-            this.dataType = DataType.LIST;
-            if(data instanceof Page) {
-                this.setPageInfo((Page) data);
-            }
         }
     }
 

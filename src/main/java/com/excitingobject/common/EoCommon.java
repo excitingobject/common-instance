@@ -1,15 +1,26 @@
 package com.excitingobject.common;
 
+import com.excitingobject.common.api.message.MessageComponent;
+import com.excitingobject.common.api.response.EoException;
+import com.excitingobject.common.api.response.EoResponseStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public abstract class EoCommon implements EoConstants {
-    public static boolean isNull(Object data) {
+
+    @Autowired
+    protected MessageComponent _msg;
+
+    protected boolean _isNull(Object data) {
         return data == null;
     }
 
-    public static boolean isEmpty(Object data) {
-        if (!isNull(data)) {
+    protected boolean _isEmpty(Object data) {
+        if (!_isNull(data)) {
             try {
                 if (data instanceof String) {
                     return data.toString().trim().equals("");
@@ -27,16 +38,20 @@ public abstract class EoCommon implements EoConstants {
         return true;
     }
 
-    public static void checkRequired(Map<String, Object> params, String... keys) throws Exception {
+    protected void _checkRequired(Map<String, Object> params, String... keys) throws Exception {
         // TODO throw EoException
-        if (isEmpty(params)) {
+        if (_isEmpty(params)) {
             throw new NullPointerException();
         }
         for (String key : keys) {
-            if (!params.containsKey(key) || isEmpty(params.get(key))) {
+            if (!params.containsKey(key) || _isEmpty(params.get(key))) {
                 throw new NullPointerException(key);
             }
         }
+    }
+
+    protected void _throwException(EoResponseStatus status, String... args) throws EoException {
+        throw new EoException(status, _msg.get(status, args));
     }
 }
 

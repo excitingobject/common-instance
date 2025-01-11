@@ -26,12 +26,12 @@ public abstract class SeqGenerator implements IdentifierGenerator, Configurable,
     @Autowired
     private SeqRepository seqRepository;
 
-    protected abstract void initList(List<SeqEntity> list);
+    protected abstract void initSeqData(List<SeqEntity> list);
 
     @PostConstruct
     private void init() {
         List<SeqEntity> list = new ArrayList<>();
-        this.initList(list);
+        this.initSeqData(list);
         for (SeqEntity e : list) {
             if (e != null && !seqRepository.existsById(e.getTableName())) {
                 seqRepository.save(e);
@@ -62,18 +62,18 @@ public abstract class SeqGenerator implements IdentifierGenerator, Configurable,
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
         try {
-            ProcedureCall procedureCall = session.createStoredProcedureCall(PROCEDURE); // 호출할 프로시저
-            procedureCall.registerParameter(KEY_IN, String.class, ParameterMode.IN); // 프로시저에 선언된 입력받는 변수명 등록
-            procedureCall.registerParameter(KEY_OUT_SEQ, Long.class, ParameterMode.OUT); // 프로시저에 선언된 반환하는 변수명 등록
-            procedureCall.registerParameter(KEY_OUT_PREFIX, String.class, ParameterMode.OUT);
-            procedureCall.setParameter(KEY_IN, tableName); // 프로시저의 변수에 전달할 파라미터 설정
-            ProcedureOutputs outputs = procedureCall.getOutputs(); // 프로시저에서 반환하는값들
+            ProcedureCall procedureCall = session.createStoredProcedureCall(PROCEDURE); // 프로시저 호출 객체 생성
+            procedureCall.registerParameter(KEY_IN, String.class, ParameterMode.IN); // 프로시저 파라메터 등록 (입력 변수: IN_TABLE_NAME)
+            procedureCall.registerParameter(KEY_OUT_SEQ, Long.class, ParameterMode.OUT); // 프로시저 파라메터 등록 (출력 변수: OUT_SEQ)
+            procedureCall.registerParameter(KEY_OUT_PREFIX, String.class, ParameterMode.OUT); // 프로시저 파라메터 등록 (출력 변수: OUT_PREFIX)
+            procedureCall.setParameter(KEY_IN, tableName); // 프로시저의 입력 변수 값 세팅
+            ProcedureOutputs outputs = procedureCall.getOutputs(); // 프로시저 호출
 
-            // ID : {prefix}{dateCode: YYYYMMDD}{seqCode: 36진수 6자리 문자열(000000~ZZZZZZ)}
+            // ID : {prefix}{dateCode}{seqCode}
             Long seq = (Long) outputs.getOutputParameterValue(KEY_OUT_SEQ);
             String prefix = (String) outputs.getOutputParameterValue(KEY_OUT_PREFIX);
-            String dateCode = dataCodeFormat.format(new Date());
-            String seqCode = getSeqCode(new BigDecimal(seq.toString()));
+            String dateCode = dataCodeFormat.format(new Date()); // 8자리 문자열(yyyyMMdd)
+            String seqCode = getSeqCode(new BigDecimal(seq.toString())); // 6자리 문자열(000000 ~ ZZZZZZ)
 
 //            logger.info("[IdGenerator - tableName:"+tableName+"] Create ID : " + id);
             return prefix + dateCode + seqCode;
@@ -84,10 +84,11 @@ public abstract class SeqGenerator implements IdentifierGenerator, Configurable,
     }
 
     /**
-     * 10진수(seq)로 seqCode(36진수 6자리 문자열 : 000000 ~ ZZZZZZ)생성
+     * seq 값을 seqCode 로 변환
+     * - seq: 프로시저 반환 값 (10진수: 0 ~ 2,176,782,335)
+     * - seqCode: 6자리 문자열 (36진수: 000000 ~ ZZZZZZ)
      */
     private String getSeqCode(BigDecimal seq) {
-        // seqCode : 36진수 6자리: 000000(0) ~ ZZZZZZ(2,176,782,335)
         BigDecimal num = seq; // 10진수값
         BigDecimal su = new BigDecimal("36"); // 변환 진수(36)
         int digit = 6; // 변환 진수 자릿수

@@ -1,2 +1,4 @@
-com.excitingobject.common.api.sequences.SeqConfig
+com.excitingobject.common.EoCommonConfig
 com.excitingobject.common.api.message.MessageConfig
+com.excitingobject.common.api.sequences.SeqConfig
+com.excitingobject.common.mq.rabbit.RabbitMqConfig

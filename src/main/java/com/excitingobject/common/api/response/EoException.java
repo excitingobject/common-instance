@@ -16,13 +16,12 @@ public class EoException extends Exception {
         }
     }
 
-    public EoException(EoResponseStatus status) {
-        super();
-        this.status = status;
-    }
-
     public EoException(EoResponseStatus status, String message) {
         super(message);
         this.status = status;
+    }
+
+    enum Key {
+        Forbidden
     }
 }
